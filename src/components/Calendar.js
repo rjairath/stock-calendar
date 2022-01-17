@@ -8,7 +8,7 @@ const data = [
   { date: "02/01/2022", price: 200 },
 ];
 
-const MyCalendar = () => {
+const MyCalendar = ({ setMaxProfitResult }) => {
   const [date, setDate] = useState(new Date());
   const [stockData, setStockData] = useState(data);
   const [stockDataObj, setStockDataObj] = useState({});
@@ -22,11 +22,34 @@ const MyCalendar = () => {
       obj[stock.date] = stock.price;
     });
     setStockDataObj(obj);
+
+    // Compute max profit
+    computeMaxProfit();
   }, [stockData]);
 
   const onChange = (calDate) => {
-    //TODO
     setDate(calDate);
+  };
+
+  const computeMaxProfit = () => {
+    let arr = [...stockData];
+    console.log(arr);
+    let minValue = Number.MAX_SAFE_INTEGER,
+      minDate = "";
+    let maxProfit = 0,
+      maxDate = "";
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].price < minValue) {
+        minValue = arr[i].price;
+        minDate = arr[i].date;
+      } else if (arr[i].price - minValue > maxProfit) {
+        maxProfit = arr[i].price - minValue;
+        maxDate = arr[i].date;
+      }
+    }
+    maxProfit = maxProfit * 10;
+    console.log(maxProfit, minDate, maxDate);
+    setMaxProfitResult({ maxProfit, minDate, maxDate });
   };
 
   const removeClicked = (date) => {
@@ -78,7 +101,7 @@ const MyCalendar = () => {
       />
 
       <Modal isOpen={modalOpened} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+        <ModalHeader toggle={toggle}>Add Price for {selectedDate}</ModalHeader>
 
         <ModalBody>
           <input

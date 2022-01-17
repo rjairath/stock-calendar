@@ -1,15 +1,17 @@
+import { useState } from "react";
 import "./App.css";
 import Calendar from "./components/Calendar";
 import SidePanel from "./components/SidePanel";
 
 function App() {
+  const [maxProfitResult, setMaxProfitResult] = useState({});
   return (
     <div className="root-container">
       <div className="calendar-block">
-        <Calendar />
+        <Calendar setMaxProfitResult={setMaxProfitResult} />
       </div>
-      <div style={{ width: "40%" }}>
-        <SidePanel />
+      <div className="sidepanel-block">
+        <SidePanel maxProfit={maxProfitResult} />
       </div>
     </div>
   );
