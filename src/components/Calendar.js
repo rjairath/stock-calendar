@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 
 const data = [
   { date: "01/01/2022", price: 100 },
@@ -11,6 +12,9 @@ const MyCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [stockData, setStockData] = useState(data);
   const [stockDataObj, setStockDataObj] = useState({});
+  const [modalOpened, setModalOpened] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [addedPrice, setAddedPrice] = useState(0);
 
   useEffect(() => {
     let obj = {};
@@ -32,8 +36,18 @@ const MyCalendar = () => {
 
   const addClicked = (date) => {
     let dateStr = date.toLocaleDateString();
-    let newObj = { date: dateStr, price: 1000 };
-    setStockData([...stockData, newObj]);
+    setSelectedDate(dateStr);
+    toggle();
+    // let newObj = { date: dateStr, price: 1000 };
+    // setStockData([...stockData, newObj]);
+  };
+
+  const addConfirmed = () => {
+    if (addedPrice) {
+      let newObj = { date: selectedDate, price: addedPrice };
+      setStockData([...stockData, newObj]);
+    }
+    toggle();
   };
 
   const setCalendar = (date) => {
@@ -52,15 +66,34 @@ const MyCalendar = () => {
     );
   };
 
+  const toggle = () => setModalOpened(!modalOpened);
+
   return (
     <div>
-      (
       <Calendar
         onChange={onChange}
         value={date}
         tileContent={({ date }) => setCalendar(date)}
+        minDetail="month"
       />
-      )
+
+      <Modal isOpen={modalOpened} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+
+        <ModalBody>
+          <input
+            type="number"
+            value={addedPrice}
+            onChange={(e) => setAddedPrice(e.target.value)}
+          />
+        </ModalBody>
+
+        <ModalFooter>
+          <Button color="primary" onClick={() => addConfirmed()}>
+            Add
+          </Button>{" "}
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };
