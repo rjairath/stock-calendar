@@ -7,6 +7,9 @@ function App() {
   const [maxProfitResult, setMaxProfitResult] = useState({});
   return (
     <div className="root-container">
+      <div className="header-block">
+        <h1>The Stock Watcher</h1>
+      </div>
       <div className="calendar-block">
         <Calendar setMaxProfitResult={setMaxProfitResult} />
       </div>
