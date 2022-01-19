@@ -33,22 +33,27 @@ const MyCalendar = ({ setMaxProfitResult }) => {
 
   const computeMaxProfit = () => {
     let arr = [...stockData];
-    console.log(arr);
-    let minValue = Number.MAX_SAFE_INTEGER,
-      minDate = "";
+    arr.sort((a, b) => {
+      a = a.date.split("/").reverse().join("");
+      b = b.date.split("/").reverse().join("");
+
+      return a > b ? 1 : a < b ? -1 : 0;
+    });
+
+    let minDate = "";
     let maxProfit = 0,
       maxDate = "";
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i].price < minValue) {
-        minValue = arr[i].price;
-        minDate = arr[i].date;
-      } else if (arr[i].price - minValue > maxProfit) {
-        maxProfit = arr[i].price - minValue;
-        maxDate = arr[i].date;
+
+    for (let i = 0; i < arr.length - 1; i++) {
+      for (let j = i + 1; j < arr.length; j++) {
+        if (arr[j].price - arr[i].price > maxProfit) {
+          minDate = arr[i].date;
+          maxDate = arr[j].date;
+          maxProfit = arr[j].price - arr[i].price;
+        }
       }
     }
     maxProfit = maxProfit * 10;
-    console.log(maxProfit, minDate, maxDate);
     setMaxProfitResult({ maxProfit, minDate, maxDate });
   };
 
